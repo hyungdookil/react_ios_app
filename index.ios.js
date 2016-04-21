@@ -14,18 +14,10 @@ import React, {
   View,
 } from 'react-native';
 
-var API_KEY = '7waqfqbprs7pajbz28mqf6vz';
-var API_URL = 'http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json';
-var PAGE_SIZE = 25;
-var PARAMS = '?apikey=' + API_KEY + '&page_limit=' + PAGE_SIZE;
-var REQUEST_URL = API_URL + PARAMS;
-
-/*
-var ACCESS_TOKEN = '1593633835.e72da0a.7d50f63db6b0415e9631ec581a9dc250';
-var API_URL = 'https://api.instagram.com/v1'
+var ACCESS_TOKEN = '';
+var API_URL = 'https://api.instagram.com/v1';
 var PARAMS = '/users/self/media/recent/?access_token=' + ACCESS_TOKEN;
 var INSTAGRAM_REQUEST_URL = API_URL + PARAMS;
-*/
 
 class react_ios_app extends Component {
 
@@ -43,11 +35,11 @@ class react_ios_app extends Component {
   }
 
   fetchData() {
-    fetch(REQUEST_URL)
+    fetch(INSTAGRAM_REQUEST_URL)
       .then((response) => response.json())
       .then((responseData) => {
         this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(responseData.movies),
+          dataSource: this.state.dataSource.cloneWithRows(responseData.data),
           loaded: true,
         });
       })
@@ -72,22 +64,22 @@ class react_ios_app extends Component {
     return (
       <View style={styles.container}>
         <Text>
-          Loading movies ...
+          Loading Photos ...
         </Text>
       </View>
     );
   }
 
-  renderMovie(movie) {
+  renderMovie(feed) {
     return (
       <View style={styles.container}>
         <Image
-          source={{uri: movie.posters.thumbnail}}
+          source={{uri: feed.images.thumbnail.url}}
           style={styles.thumbnail}
         />
         <View style={styles.rightContainer}>
-          <Text style={styles.title}>{movie.title}</Text>
-          <Text style={styles.year}>{movie.year}</Text>
+          <Text style={styles.title}>{feed.caption.text}</Text>
+          <Text style={styles.year}>{feed.caption.created_time}</Text>
         </View>
       </View>
     );
@@ -103,18 +95,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   thumbnail: {
-    width: 53,
-    height: 81,
+    width: 150,
+    height: 150,
   },
   rightContainer: {
     flex: 1,
   },
   title: {
-    fontSize: 15,
+    fontSize: 13,
     marginBottom: 8,
     textAlign: 'center',
   },
   year: {
+    fontSize: 13,
     textAlign: 'center',
   },
   listView: {
